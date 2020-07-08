@@ -471,7 +471,7 @@
 		var key_pressed = event.which;
 		var key_binds = [67, 68, 82, 37, 38, 39, 40];
 
-		if (canvas.getActiveObject() !== null) {
+		if (canvas.getActiveObject() !== null && canvas.getActiveObject() !== undefined) {
 			var object  = canvas.getActiveObject();
 			var type 	=  object.get('type');
 			console.log("Clem is looking at an", type);

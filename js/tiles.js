@@ -24,6 +24,7 @@ var tiles = [
 	['img/tiles/misc-garden-large.svg',				'Misc',					'Garden - Large',			800,			800,			-15,			-8],
 	['img/tiles/misc-garden-small.svg',				'Misc',					'Garden - Small',			400,			400,			-10,			-6],
 	['img/tiles/misc-observatory.svg',				'Misc',					'Observatory',				1200,			1920,			-2,				-5],
+	['img/tiles/misc-open-space.svg',				'Misc',					'Open Space',				2000,			2080,			-2,				-5],
 	['img/tiles/interactive-obstacle-course.svg',	'Misc',					'Obstacle Course',			2000,			2320,			-10,			-10],
 	['img/tiles/utility-reactor.svg',				'Misc',					'Reactor',					400,			400,			-5,				25],
 	['img/tiles/misc-temple-of-honor.svg',			'Misc',					'Temple of Honor',			800,			800,			-2,				-5]

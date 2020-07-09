@@ -790,6 +790,52 @@
 			return false;
 		}
 	});
+	
+	$("#gui_btn_save_local").click(function(event) {
+		var elem = $(event.target);
+		var success = false;
+		try {
+			var json = elem.attr("json");
+			if (json) {
+				localStorage.setItem("dojo", json);
+			} else {
+				localStorage.removeItem("dojo");
+			}
+			success = true;
+		} catch(e) {
+			success = false;
+		}
+		if (success) {
+			var json2 = localStorage.getItem("dojo");
+			if (!json2 && json)
+				success = false;
+		}
+		if (success) {
+    		elem.html('<i class="fa fa-check mr-1"></i> Saved!');
+    		elem.removeClass("btn-primary").addClass("btn-success");
+		} else {
+    		elem.html('<i class="fa fa-exclamation-triangle mr-1"></i> Error saving dojo, try another method!');
+    		elem.removeClass("btn-primary").addClass("btn-danger");
+		}
+	});
+	$("#gui_btn_open_local").click(function(event) {
+		var json = localStorage.getItem("dojo");
+		if (!json)
+		{
+			$("#output_open_local a").attr("href", '#');
+			$("#output_open_local a").text('');
+			$("#output_open_local span").text("Nothing was saved earlier!");
+			if ($("#output_open_local").hasClass("hide")) {
+				$("#output_open_local").toggleClass("hide show");
+			}
+			return;
+		}
+		if (!$("#output_open_local").hasClass("hide")) {
+			$("#output_open_local").toggleClass("hide show");
+		}
+		$("#textarea_data_input").val(json);
+		loadData();
+	});
 
 // Start of Load/Save/Import Features
 //-----------------------------------------------------------------
@@ -840,6 +886,9 @@
 		$("#textarea_data").text(json_data);
 		$("#gui_btn_download_json").attr("href", json_data_uri);
 		$("#gui_btn_download_json").attr("download", "dojo_layout.json");
+		
+		$("#gui_btn_save_local").attr("json", json_data);
+		$("#gui_btn_save_local").removeClass("btn-success btn-danger").addClass("btn-primary").html("Save");
 
 	  // Export to SVG
 		var svg_data = canvas.toSVG({

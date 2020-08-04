@@ -333,9 +333,13 @@
 // Change color of the active element
 	function changeColor(color, object) {
 		console.log("Clem paints the walls in "+color);
-		if (object && object.get('type')!=="activeSelection") {
-			console.log("type: "+object.get('type'));
-			console.log(object);
+		if (!object) return;
+		if(object.get('type') === "activeSelection") {
+			object._objects.forEach(function(obj) {
+				changeColor(color, obj);
+			});
+		} else {
+			console.log("type: " + object.get('type') + "\n", object);
 			if (object._objects) {
 				object._objects.forEach(function(path) {
 					// This bit is a little weird. We're repainting the paths found within the SVG, unless they have 

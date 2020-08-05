@@ -292,6 +292,7 @@
 			'dojo_room', 'dojo_cap', 'dojo_power',
 			'borderColor', 'lockScalingFlip',
 		];
+		var clone_result;
 		object.clone(function(cloned) {
 			canvas.discardActiveObject();
 			cloned.set({
@@ -299,7 +300,7 @@
 				top: cloned.top,
 				evented: true,
 			});
-			if (object.type=="group") {
+			if (object.type === "group") {
 				cloned.setControlsVisibility({
 					mt: false,
 					mb: false,
@@ -326,19 +327,16 @@
 			canvas.setActiveObject(cloned);
 			canvas.requestRenderAll();
 			console.log("Clem underwent mitosis and produced a ",object.type);
-		}, propertiesToInclude)
+			clone_result = cloned;
+		}, propertiesToInclude);
 		gui_reCalcDojoStats();
+		return clone_result;
 	}
 
 // Change color of the active element
 	function changeColor(color, object) {
 		console.log("Clem paints the walls in "+color);
-		if (!object) return;
-		if(object.get('type') === "activeSelection") {
-			object._objects.forEach(function(obj) {
-				changeColor(color, obj);
-			});
-		} else {
+		if (object && object.get('type') !== "activeSelection") {
 			console.log("type: " + object.get('type') + "\n", object);
 			if (object._objects) {
 				object._objects.forEach(function(path) {
@@ -368,8 +366,22 @@
 			// selecting/deselecting everything on the canvas did. Could *not* get this working, so the workaround 
 			// is just clone the object on top of itself, which forces it to take on the new style, and then delete 
 			// the old one. 
-			canvas_cloneObject(object, 0);
+			let cloned = canvas_cloneObject(object, 0);
 			canvas_removeObject(object);
+			return cloned;
+		} else {
+			if (object) {
+				var objectsForPainting = object.getObjects();
+				var objectsForGrouping = [];
+				canvas.discardActiveObject();
+				for (let objectForPainting of objectsForPainting) {
+					canvas.setActiveObject(objectForPainting);
+					//coloring an item recreates it, so old object is no longer valid (look branch for single item of if)
+					objectsForGrouping.push(changeColor(color, objectForPainting));
+				}
+				canvas.setActiveObject(new fabric.ActiveSelection(objectsForGrouping, {canvas: canvas,}));
+				canvas.requestRenderAll();
+			}
 		}
 	}
 
@@ -741,7 +753,7 @@
 		move: function (color) {
 			var new_color = color.toHexString();
 			var object = canvas.getActiveObject();
-		    changeColor(new_color, object);	    
+			changeColor(new_color, object);
 		},
 		show: function () {},
 		beforeShow: function () {},
